@@ -25,12 +25,12 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         {/* Property Image Placeholder */}
 
         <div className="aspect-w-16 aspect-h-12 bg-gradient-to-br from-indigo-100 to-indigo-200">
-          <div className="w-full h-60 md:h-72 lg:h-96 bg-gradient-to-br from-indigo-100 to-indigo-200 flex items-center justify-center">
+          <div className="w-full h-60 md:h-72 lg:h-96 bg-gradient-to-br from-indigo-100 to-indigo-200 flex items-center justify-center overflow-hidden group">
             {property.photo ? (
               <img
                 src={property.photo}
                 alt={property.name}
-                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                className="object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-105"
               />
             ) : (
               <svg

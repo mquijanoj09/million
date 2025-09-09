@@ -5,14 +5,9 @@ namespace million.api.Services
 {
     public interface IPropertyService
     {
-        Task<(List<Property>, int)> GetPropertiesAsync(PropertyFilter? filter = null, PaginationParams? pagination = null);
-        Task<Property?> GetPropertyByIdAsync(int id);
-        Task<Property> CreatePropertyAsync(Property property);
-        Task<Property?> UpdatePropertyAsync(int id, Property property);
-        Task<bool> DeletePropertyAsync(int id);
+        Task<List<Property>> GetPropertiesAsync(PropertyFilter? filter = null);
+        Task<Property?> GetPropertyByIdAsync(string id);
         Task<PropertySummary> GetPropertySummaryAsync();
-        Task<List<Property>> GetPropertiesByOwnerIdAsync(int ownerId);
-        Task<int> GetNextNumericIdAsync();
     }
 
     public class PropertyService : IPropertyService
@@ -26,7 +21,7 @@ namespace million.api.Services
             _ownerService = ownerService;
         }
 
-        public async Task<(List<Property>, int)> GetPropertiesAsync(PropertyFilter? filter = null, PaginationParams? pagination = null)
+        public async Task<List<Property>> GetPropertiesAsync(PropertyFilter? filter = null)
         {
             var filterBuilder = Builders<Property>.Filter.Empty;
 
@@ -66,19 +61,7 @@ namespace million.api.Services
                 }
             }
 
-            // Get total count
-            var totalCount = await _properties.CountDocumentsAsync(filterBuilder);
-
-            // Apply pagination
-            var query = _properties.Find(filterBuilder);
-            
-            if (pagination != null)
-            {
-                var skip = (pagination.Page - 1) * pagination.PageSize;
-                query = query.Skip(skip).Limit(pagination.PageSize);
-            }
-
-            var properties = await query.ToListAsync();
+            var properties = await _properties.Find(filterBuilder).ToListAsync();
 
             // Load owner information for each property
             foreach (var property in properties)
@@ -90,56 +73,33 @@ namespace million.api.Services
             if (filter?.Owner != null)
             {
                 properties = properties.Where(p => p.Owner?.Name.Contains(filter.Owner, StringComparison.OrdinalIgnoreCase) == true).ToList();
-                totalCount = properties.Count;
             }
 
-            return (properties, (int)totalCount);
+            return properties;
         }
 
-        public async Task<Property?> GetPropertyByIdAsync(int id)
+        public async Task<Property?> GetPropertyByIdAsync(string id)
         {
-            var property = await _properties.Find(property => property.NumericId == id).FirstOrDefaultAsync();
+            Property? property = null;
+            
+            // Try to find by MongoDB ObjectId first
+            if (MongoDB.Bson.ObjectId.TryParse(id, out var objectId))
+            {
+                property = await _properties.Find(p => p.Id == id).FirstOrDefaultAsync();
+            }
+            
+            // If not found and the id is numeric, try to find by NumericId
+            if (property == null && int.TryParse(id, out var numericId))
+            {
+                property = await _properties.Find(p => p.NumericId == numericId).FirstOrDefaultAsync();
+            }
+            
             if (property != null)
             {
                 property.Owner = await _ownerService.GetOwnerByIdAsync(property.IdOwner);
             }
-            return property;
-        }
-
-        public async Task<Property> CreatePropertyAsync(Property property)
-        {
-            property.NumericId = await GetNextNumericIdAsync();
-            property.CreatedAt = DateTime.UtcNow;
-            property.UpdatedAt = DateTime.UtcNow;
-            await _properties.InsertOneAsync(property);
             
-            // Load owner information
-            property.Owner = await _ownerService.GetOwnerByIdAsync(property.IdOwner);
             return property;
-        }
-
-        public async Task<Property?> UpdatePropertyAsync(int id, Property property)
-        {
-            property.UpdatedAt = DateTime.UtcNow;
-            var filter = Builders<Property>.Filter.Eq(p => p.NumericId, id);
-            var update = Builders<Property>.Update
-                .Set(p => p.Name, property.Name)
-                .Set(p => p.Address, property.Address)
-                .Set(p => p.Price, property.Price)
-                .Set(p => p.CodeInternal, property.CodeInternal)
-                .Set(p => p.Year, property.Year)
-                .Set(p => p.IdOwner, property.IdOwner)
-                .Set(p => p.Photo, property.Photo)
-                .Set(p => p.UpdatedAt, property.UpdatedAt);
-
-            var result = await _properties.UpdateOneAsync(filter, update);
-            return result.MatchedCount > 0 ? await GetPropertyByIdAsync(id) : null;
-        }
-
-        public async Task<bool> DeletePropertyAsync(int id)
-        {
-            var result = await _properties.DeleteOneAsync(property => property.NumericId == id);
-            return result.DeletedCount > 0;
         }
 
         public async Task<PropertySummary> GetPropertySummaryAsync()
@@ -152,29 +112,6 @@ namespace million.api.Services
                 TotalValue = properties.Sum(p => p.Price),
                 AveragePrice = properties.Any() ? properties.Average(p => p.Price) : 0
             };
-        }
-
-        public async Task<List<Property>> GetPropertiesByOwnerIdAsync(int ownerId)
-        {
-            var properties = await _properties.Find(property => property.IdOwner == ownerId).ToListAsync();
-            
-            // Load owner information for each property
-            foreach (var property in properties)
-            {
-                property.Owner = await _ownerService.GetOwnerByIdAsync(property.IdOwner);
-            }
-
-            return properties;
-        }
-
-        public async Task<int> GetNextNumericIdAsync()
-        {
-            var lastProperty = await _properties.Find(property => true)
-                .SortByDescending(property => property.NumericId)
-                .Limit(1)
-                .FirstOrDefaultAsync();
-
-            return lastProperty?.NumericId + 1 ?? 1;
         }
     }
 }

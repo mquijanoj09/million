@@ -14,7 +14,7 @@ import { formatPrice } from "@/lib/formatPrice";
 
 export default function PropertyDetailPage() {
   const params = useParams();
-  const propertyId = parseInt(params.id as string);
+  const propertyId = params.id as string;
 
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);

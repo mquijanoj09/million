@@ -63,6 +63,7 @@ export default function PropertyFilters({
   };
 
   const activeFilterCount = getActiveFilterCount(filters);
+  console.log("Active Filter Count:", activeFilterCount);
 
   return (
     <>
@@ -87,7 +88,7 @@ export default function PropertyFilters({
           </svg>
           <span>Filter Properties</span>
           {hasActiveFilters && (
-            <span className="bg-white bg-opacity-20 text-white px-2 py-1 rounded-full text-xs">
+            <span className="bg-white bg-opacity-20 text-indigo-600 px-2 py-1 ml-2 rounded-full text-xs">
               {activeFilterCount}
             </span>
           )}

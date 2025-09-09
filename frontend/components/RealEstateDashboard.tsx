@@ -19,12 +19,9 @@ export default function Dashboard() {
       setError(null);
 
       // Fetch recent properties (first 4)
-      const propertiesResponse = await propertyService.getProperties(
-        {},
-        { page: 1, pageSize: 4 }
-      );
+      const propertiesResponse = await propertyService.getProperties();
       if (propertiesResponse.success) {
-        setRecentProperties(propertiesResponse.data);
+        setRecentProperties(propertiesResponse.data.filter((_, i) => i < 3));
       }
 
       // Fetch summary stats
@@ -190,7 +187,7 @@ export default function Dashboard() {
       )}
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="gap-8">
         {/* Recent Properties */}
         <div className="col-span-4">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -207,7 +204,7 @@ export default function Dashboard() {
             </div>
 
             {recentProperties.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {recentProperties.map((property) => (
                   <PropertyCard key={property.id} property={property} />
                 ))}

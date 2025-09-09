@@ -26,7 +26,6 @@ builder.Services.AddSingleton(s =>
 // Register services
 builder.Services.AddScoped<IOwnerService, OwnerService>();
 builder.Services.AddScoped<IPropertyService, PropertyService>();
-builder.Services.AddScoped<DataSeederService>();
 
 // Add controllers
 builder.Services.AddControllers();
@@ -63,11 +62,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-// Seed initial data
-using (var scope = app.Services.CreateScope())
-{
-    var dataSeeder = scope.ServiceProvider.GetRequiredService<DataSeederService>();
-    await dataSeeder.SeedDataAsync();
-}
 
 app.Run();
