@@ -1,4 +1,5 @@
 ﻿using million.api.Classes;
+using million.api.Services;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,14 +23,34 @@ builder.Services.AddSingleton(s =>
     return client.GetDatabase(settings?.DatabaseName);
 });
 
+// Register services
+builder.Services.AddScoped<IOwnerService, OwnerService>();
+builder.Services.AddScoped<IPropertyService, PropertyService>();
+builder.Services.AddScoped<DataSeederService>();
+
 // Add controllers
 builder.Services.AddControllers();
+
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 // ---- Add Swagger services ----
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// ---- Enable CORS ----
+app.UseCors("AllowFrontend");
 
 // ---- Enable Swagger middleware ----
 if (app.Environment.IsDevelopment())
@@ -41,5 +62,12 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+// Seed initial data
+using (var scope = app.Services.CreateScope())
+{
+    var dataSeeder = scope.ServiceProvider.GetRequiredService<DataSeederService>();
+    await dataSeeder.SeedDataAsync();
+}
 
 app.Run();

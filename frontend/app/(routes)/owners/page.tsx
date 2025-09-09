@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { Owner } from "../../../types";
 import { ownerService } from "../../../services";
-import Header from "../../../components/Header";
 import LoadingSpinner, {
   LoadingCard,
 } from "../../../components/LoadingSpinner";
@@ -24,7 +23,7 @@ export default function OwnersPage() {
       setLoading(true);
       setError(null);
 
-      const response = await ownerService.getOwners();
+      const response = await ownerService.getAllOwners();
       if (response.success) {
         setOwners(response.data);
       } else {

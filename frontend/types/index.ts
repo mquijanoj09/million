@@ -42,11 +42,6 @@ export interface ApiResponse<T> {
   total?: number;
 }
 
-export interface PaginationParams {
-  page: number;
-  pageSize: number;
-}
-
 export interface ChartData {
   label: string;
   value: number;

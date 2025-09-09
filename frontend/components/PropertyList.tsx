@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Property, PropertyFilter, PaginationParams } from "../types";
+import { Property, PropertyFilter } from "../types";
 import { propertyService } from "../services";
 import LoadingSpinner, { LoadingCard } from "./LoadingSpinner";
 import { ErrorMessage } from "./ErrorBoundary";
@@ -13,26 +13,19 @@ export default function PropertyList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<PropertyFilter>({});
-  const [pagination, setPagination] = useState<PaginationParams>({
-    page: 1,
-    pageSize: 8,
-  });
-  const [total, setTotal] = useState(0);
 
   const fetchProperties = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await propertyService.getProperties(filters, pagination);
+      const response = await propertyService.getProperties(filters);
 
       if (response.success) {
         setProperties(response.data);
-        setTotal(response.total || 0);
       } else {
         setError(response.message || "Failed to fetch properties");
-        setProperties(response.data); // Still show mock data
-        setTotal(response.total || 0);
+        setProperties(response.data); // Still show data if available
       }
     } catch (err) {
       setError("Failed to fetch properties");
@@ -43,18 +36,11 @@ export default function PropertyList() {
 
   useEffect(() => {
     fetchProperties();
-  }, [filters, pagination]);
+  }, [filters]);
 
   const handleFilterChange = (newFilters: PropertyFilter) => {
     setFilters(newFilters);
-    setPagination({ ...pagination, page: 1 }); // Reset to first page when filtering
   };
-
-  const handlePageChange = (page: number) => {
-    setPagination({ ...pagination, page });
-  };
-
-  const totalPages = Math.ceil(total / pagination.pageSize);
 
   if (loading && properties.length === 0) {
     return (
@@ -104,7 +90,7 @@ export default function PropertyList() {
         {/* Results Summary */}
         <div className="mb-6 flex justify-between items-center">
           <p className="text-gray-600">
-            Showing {properties.length} of {total} properties
+            Showing {properties.length} properties
             {Object.keys(filters).length > 0 && " (filtered)"}
           </p>
           {loading && properties.length > 0 && <LoadingSpinner size="sm" />}
@@ -112,55 +98,11 @@ export default function PropertyList() {
 
         {/* Properties Grid */}
         {properties.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-              {properties.map((property) => (
-                <PropertyCard key={property.id} property={property} />
-              ))}
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center space-x-2">
-                <button
-                  onClick={() => handlePageChange(pagination.page - 1)}
-                  disabled={pagination.page === 1}
-                  className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Previous
-                </button>
-
-                <div className="flex space-x-1">
-                  {[...Array(totalPages)].map((_, i) => {
-                    const pageNum = i + 1;
-                    const isActive = pageNum === pagination.page;
-
-                    return (
-                      <button
-                        key={pageNum}
-                        onClick={() => handlePageChange(pageNum)}
-                        className={`px-3 py-2 text-sm font-medium rounded-md ${
-                          isActive
-                            ? "bg-indigo-600 text-white"
-                            : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-50"
-                        }`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <button
-                  onClick={() => handlePageChange(pagination.page + 1)}
-                  disabled={pagination.page === totalPages}
-                  className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Next
-                </button>
-              </div>
-            )}
-          </>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {properties.map((property) => (
+              <PropertyCard key={property.id} property={property} />
+            ))}
+          </div>
         ) : (
           !loading && (
             <div className="text-center py-12">
