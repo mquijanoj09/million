@@ -31,3 +31,9 @@
 /Users/mquijanoj/million/backend/million.api/obj/Debug/net8.0/million.api.pdb
 /Users/mquijanoj/million/backend/million.api/obj/Debug/net8.0/million.api.genruntimeconfig.cache
 /Users/mquijanoj/million/backend/million.api/obj/Debug/net8.0/ref/million.api.dll
+/Users/mquijanoj/million/backend/million.api/bin/Debug/net8.0/DnsClient.dll
+/Users/mquijanoj/million/backend/million.api/bin/Debug/net8.0/MongoDB.Bson.dll
+/Users/mquijanoj/million/backend/million.api/bin/Debug/net8.0/MongoDB.Driver.dll
+/Users/mquijanoj/million/backend/million.api/bin/Debug/net8.0/SharpCompress.dll
+/Users/mquijanoj/million/backend/million.api/bin/Debug/net8.0/Snappier.dll
+/Users/mquijanoj/million/backend/million.api/bin/Debug/net8.0/ZstdSharp.dll
