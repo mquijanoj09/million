@@ -14,7 +14,7 @@ export default function LoadingSpinner({
   };
 
   const colorClasses = {
-    blue: "border-blue-600",
+    blue: "border-indigo-600",
     white: "border-white",
     gray: "border-gray-600",
   };

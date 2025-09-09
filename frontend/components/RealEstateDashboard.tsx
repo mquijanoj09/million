@@ -21,7 +21,7 @@ export default function Dashboard() {
       // Fetch recent properties (first 4)
       const propertiesResponse = await propertyService.getProperties(
         {},
-        { page: 1, pageSize: 6 }
+        { page: 1, pageSize: 4 }
       );
       if (propertiesResponse.success) {
         setRecentProperties(propertiesResponse.data);
@@ -52,7 +52,7 @@ export default function Dashboard() {
             <h1 className="text-3xl font-bold text-gray-900">
               Real Estate Dashboard
             </h1>
-            <p className="text-gray-600">Overview of your property portfolio</p>
+            <p className="text-gray-600">Overview of our property portfolio</p>
           </div>
 
           {/* Loading skeleton */}
@@ -99,7 +99,7 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold text-gray-900">
           Real Estate Dashboard
         </h1>
-        <p className="text-gray-600">Overview of your property portfolio</p>
+        <p className="text-gray-600">Overview of our property portfolio</p>
       </div>
 
       {/* Summary Stats */}
@@ -107,9 +107,9 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center">
-              <div className="p-2 bg-blue-100 rounded-lg">
+              <div className="p-2 bg-indigo-100 rounded-lg">
                 <svg
-                  className="w-6 h-6 text-blue-600"
+                  className="w-6 h-6 text-indigo-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -200,7 +200,7 @@ export default function Dashboard() {
               </h2>
               <a
                 href="/properties"
-                className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                className="text-indigo-600 hover:text-indigo-700 text-sm font-medium"
               >
                 View All →
               </a>

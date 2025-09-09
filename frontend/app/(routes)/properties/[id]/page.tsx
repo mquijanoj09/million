@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
-import { Property } from "../../types";
-import { propertyService } from "../../services";
-import Header from "../../components/Header";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import { ErrorMessage } from "../../components/ErrorBoundary";
-import ContactOwnerModal from "../../components/ContactOwnerModal";
-import ScheduleViewingModal from "../../components/ScheduleViewingModal";
+import { Property } from "../../../../types";
+import { propertyService } from "../../../../services";
+import Header from "../../../../components/Header";
+import LoadingSpinner from "../../../../components/LoadingSpinner";
+import { ErrorMessage } from "../../../../components/ErrorBoundary";
+import ContactOwnerModal from "../../../../components/ContactOwnerModal";
+import ScheduleViewingModal from "../../../../components/ScheduleViewingModal";
+import { formatPrice } from "@/lib/formatPrice";
 
 export default function PropertyDetailPage() {
   const params = useParams();
@@ -50,48 +51,25 @@ export default function PropertyDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header />
-        <main className=" mx-auto px-6 md:px-10 lg:px-12 py-8">
-          <div className="text-center">
-            <LoadingSpinner size="lg" />
-            <p className="mt-4 text-gray-600">Loading property details...</p>
-          </div>
-        </main>
-      </div>
+      <main className=" mx-auto px-6 md:px-10 lg:px-12 py-8">
+        <div className="text-center">
+          <LoadingSpinner size="lg" />
+          <p className="mt-4 text-gray-600">Loading property details...</p>
+        </div>
+      </main>
     );
   }
 
   if (error || !property) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header />
-        <main className=" mx-auto px-6 md:px-10 lg:px-12 py-8">
-          <ErrorMessage
-            message={error || "Property not found"}
-            onRetry={fetchProperty}
-          />
-        </main>
-      </div>
+      <main className=" mx-auto px-6 md:px-10 lg:px-12 py-8">
+        <ErrorMessage
+          message={error || "Property not found"}
+          onRetry={fetchProperty}
+        />
+      </main>
     );
   }
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
 
   const handleDownloadReport = () => {
     // Simulate download
@@ -101,15 +79,14 @@ export default function PropertyDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
+    <div>
       <main className=" mx-auto px-6 md:px-10 lg:px-12 py-8">
         {/* Breadcrumb */}
         <nav className="mb-8">
           <ol className="flex items-center space-x-2 text-sm text-gray-500">
             <li>
               <a href="/" className="hover:text-gray-700">
-                Dashboard
+                Home
               </a>
             </li>
             <li>
@@ -133,33 +110,41 @@ export default function PropertyDetailPage() {
             {/* Property Header */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               {/* Property Image Placeholder */}
-              <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-blue-100 to-blue-200">
-                <div className="w-full h-64 lg:h-80 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
-                  <svg
-                    className="w-24 h-24 text-blue-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1}
-                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+              <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-indigo-100 to-indigo-200">
+                <div className="w-full h-96 bg-gradient-to-br from-indigo-100 to-indigo-200 flex items-center justify-center">
+                  {property.photo ? (
+                    <img
+                      src={property.photo}
+                      alt={property.name}
+                      className="object-cover w-full h-full"
                     />
-                  </svg>
+                  ) : (
+                    <svg
+                      className="w-16 h-16 text-indigo-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                      />
+                    </svg>
+                  )}
                 </div>
               </div>
 
               <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
+                <div className="flex flex-col sm:flex-row sm:justify-between items-start mb-4 gap-4 sm:gap-0">
                   <div>
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
                       {property.name}
                     </h1>
                     <p className="text-lg text-gray-600">{property.address}</p>
                   </div>
-                  <div className="text-right">
+                  <div className="sm:text-right">
                     <div className="text-3xl font-bold text-green-600">
                       {formatPrice(property.price)}
                     </div>
@@ -169,19 +154,14 @@ export default function PropertyDetailPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                <div className="grid grid-cols-2 gap-4 mt-6">
                   <div className="text-center p-4 bg-gray-50 rounded-lg">
                     <div className="text-2xl font-bold text-gray-900">
                       {property.year}
                     </div>
                     <div className="text-sm text-gray-600">Year Built</div>
                   </div>
-                  <div className="text-center p-4 bg-gray-50 rounded-lg">
-                    <div className="text-2xl font-bold text-gray-900">
-                      {property.id}
-                    </div>
-                    <div className="text-sm text-gray-600">Property ID</div>
-                  </div>
+
                   <div className="text-center p-4 bg-gray-50 rounded-lg">
                     <div className="text-2xl font-bold text-gray-900">
                       Active
@@ -248,16 +228,6 @@ export default function PropertyDetailPage() {
                       <div className="text-sm text-gray-600">Owner</div>
                     </div>
                   </div>
-                  <div className="text-sm text-gray-600">
-                    <div className="mb-1">
-                      <span className="font-medium">Address:</span>
-                    </div>
-                    <div>{property.owner.address}</div>
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    <span className="font-medium">Birthday:</span>{" "}
-                    {formatDate(property.owner.birthday)}
-                  </div>
                 </div>
               </div>
             )}
@@ -270,7 +240,7 @@ export default function PropertyDetailPage() {
               <div className="space-y-3">
                 <button
                   onClick={() => setContactModalOpen(true)}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors"
                 >
                   Contact Owner
                 </button>

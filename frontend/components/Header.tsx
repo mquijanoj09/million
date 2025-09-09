@@ -9,7 +9,7 @@ export default function Header() {
   const pathname = usePathname();
 
   const navigation = [
-    { name: "Dashboard", href: "/", current: pathname === "/" },
+    { name: "Home", href: "/", current: pathname === "/" },
     {
       name: "Properties",
       href: "/properties",
@@ -24,7 +24,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="text-2xl font-bold text-blue-600">
+            <Link href="/" className="text-2xl font-bold text-indigo-600">
               Million Real Estate
             </Link>
           </div>
@@ -37,8 +37,8 @@ export default function Header() {
                 href={item.href}
                 className={`px-3 py-2 rounded-md text-sm font-medium ${
                   item.current
-                    ? "text-blue-600 bg-blue-50"
-                    : "text-gray-500 hover:text-blue-600 hover:bg-gray-50"
+                    ? "text-indigo-600 bg-indigo-50"
+                    : "text-gray-500 hover:text-indigo-600 hover:bg-gray-50"
                 }`}
               >
                 {item.name}
@@ -88,8 +88,8 @@ export default function Header() {
                   href={item.href}
                   className={`block px-3 py-2 rounded-md text-base font-medium ${
                     item.current
-                      ? "text-blue-600 bg-blue-50"
-                      : "text-gray-500 hover:text-blue-600 hover:bg-gray-50"
+                      ? "text-indigo-600 bg-indigo-50"
+                      : "text-gray-500 hover:text-indigo-600 hover:bg-gray-50"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >

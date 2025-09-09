@@ -2,21 +2,13 @@
 
 import { Property } from "../types";
 import Link from "next/link";
+import { formatPrice } from "../lib/formatPrice";
 
 interface PropertyCardProps {
   property: Property;
 }
 
 export default function PropertyCard({ property }: PropertyCardProps) {
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
-
   const getLocationParts = (address: string) => {
     const parts = address.split(", ");
     return {
@@ -28,21 +20,21 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   const location = getLocationParts(property.address);
 
   return (
-    <Link href={`/properties/${property.id}`}>
+    <Link href={`/properties/${property.id}`} className="group">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200 cursor-pointer h-full">
         {/* Property Image Placeholder */}
 
-        <div className="aspect-w-16 aspect-h-12 bg-gradient-to-br from-blue-100 to-blue-200">
-          <div className="w-full h-60 md:h-72 lg:h-96 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+        <div className="aspect-w-16 aspect-h-12 bg-gradient-to-br from-indigo-100 to-indigo-200">
+          <div className="w-full h-60 md:h-72 lg:h-96 bg-gradient-to-br from-indigo-100 to-indigo-200 flex items-center justify-center">
             {property.photo ? (
               <img
                 src={property.photo}
                 alt={property.name}
-                className="object-cover w-full h-full"
+                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
               />
             ) : (
               <svg
-                className="w-16 h-16 text-blue-400"
+                className="w-16 h-16 text-indigo-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -128,11 +120,11 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           {/* View Details Button */}
           <div className="mt-4 pt-3 border-t border-gray-100">
             <div className="flex items-center justify-between">
-              <span className="text-blue-600 font-medium text-sm">
+              <span className="text-indigo-600 font-medium text-sm">
                 View Details
               </span>
               <svg
-                className="w-4 h-4 text-blue-600"
+                className="w-4 h-4 text-indigo-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

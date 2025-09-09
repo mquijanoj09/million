@@ -141,7 +141,7 @@ export default function PropertyList() {
                         onClick={() => handlePageChange(pageNum)}
                         className={`px-3 py-2 text-sm font-medium rounded-md ${
                           isActive
-                            ? "bg-blue-600 text-white"
+                            ? "bg-indigo-600 text-white"
                             : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-50"
                         }`}
                       >
@@ -187,7 +187,7 @@ export default function PropertyList() {
               </p>
               <button
                 onClick={() => setFilters({})}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors"
               >
                 Clear Filters
               </button>

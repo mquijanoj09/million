@@ -5,6 +5,7 @@ import { Property } from "../types";
 import { propertyService } from "../services";
 import Modal from "./Modal";
 import LoadingSpinner from "./LoadingSpinner";
+import { formatPrice } from "../lib/formatPrice";
 
 interface ViewPropertiesModalProps {
   isOpen: boolean;
@@ -51,15 +52,6 @@ export default function ViewPropertiesModal({
     fetchOwnerProperties();
   }, [isOpen, ownerId]);
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
-
   return (
     <Modal
       isOpen={isOpen}
@@ -77,7 +69,7 @@ export default function ViewPropertiesModal({
             <div className="text-red-600 mb-2">{error}</div>
             <button
               onClick={fetchOwnerProperties}
-              className="text-blue-600 hover:text-blue-700 text-sm"
+              className="text-indigo-600 hover:text-indigo-700 text-sm"
             >
               Try again
             </button>
@@ -135,7 +127,7 @@ export default function ViewPropertiesModal({
                   </span>
                   <a
                     href={`/properties/${property.id}`}
-                    className="text-blue-600 hover:text-blue-700 font-medium"
+                    className="text-indigo-600 hover:text-indigo-700 font-medium"
                   >
                     View Details →
                   </a>
