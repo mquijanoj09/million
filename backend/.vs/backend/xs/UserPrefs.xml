@@ -1,29 +1,27 @@
 ﻿<Properties StartupConfiguration="{CB39BC15-F084-4945-8147-334C47956197}|https">
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.million.api PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="million.api/Program.cs">
     <Files>
-      <File FileName="million.api/Program.cs" Line="28" Column="38" />
-      <File FileName="million.api/WeatherForecast.cs" />
-      <File FileName="million.api/Controllers/WeatherForecastController.cs" Line="1" Column="1" />
-      <File FileName="million.api/appsettings.json" Line="14" Column="1" />
-      <File FileName="million.api/mongoDBSettings.cs" Line="6" Column="1" />
+      <File FileName="million.api/Program.cs" Line="67" Column="1" />
+      <File FileName="million.api/Classes/MongoDBSettings.cs" />
+      <File FileName="million.api/appsettings.json" />
+      <File FileName="million.api/Properties/launchSettings.json" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="backend" selected="True">
-            <Node name="million.api">
-              <Node name="Controllers" expanded="True" />
-            </Node>
+          <Node name="backend" expanded="True">
+            <Node name="million.api" expanded="True" />
+            <Node name="million.api.tests" expanded="True" selected="True" />
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.ItemProperties.million.api PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MultiItemStartupConfigurations />
 </Properties>

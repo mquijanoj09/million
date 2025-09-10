@@ -1,4 +1,5 @@
 ﻿using million.api.Classes;
+using million.api.Services;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,14 +23,33 @@ builder.Services.AddSingleton(s =>
     return client.GetDatabase(settings?.DatabaseName);
 });
 
+// Register services
+builder.Services.AddScoped<IOwnerService, OwnerService>();
+builder.Services.AddScoped<IPropertyService, PropertyService>();
+
 // Add controllers
 builder.Services.AddControllers();
+
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 // ---- Add Swagger services ----
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// ---- Enable CORS ----
+app.UseCors("AllowFrontend");
 
 // ---- Enable Swagger middleware ----
 if (app.Environment.IsDevelopment())
@@ -43,3 +63,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Make Program class accessible for testing
+public partial class Program { }
