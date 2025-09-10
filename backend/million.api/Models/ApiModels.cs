@@ -24,6 +24,12 @@ namespace million.api.Models
         public string? Message { get; set; }
         public int? Total { get; set; }
 
+        // Parameterless constructor for JSON deserialization
+        public ApiResponse()
+        {
+            Data = default(T)!;
+        }
+
         public ApiResponse(T data)
         {
             Data = data;
